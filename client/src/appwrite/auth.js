@@ -1,4 +1,4 @@
-import conf from '../conf.js';
+import conf from '../conf/conf';
 import { Client, Account, ID } from "appwrite";
 
 export class AuthService {
@@ -52,10 +52,14 @@ export class AuthService {
 
     async getCurrentUser() {
         try {
-            await this.account.get()
+            return await this.account.get();
         } catch (error) {
-            console.log("Appwrite service :: logout :: error", error);
+            // 401 is the expected error when a user is not logged in
+            if (error.code !== 401) {
+                console.log("Appwrite service :: getCurrentUser :: error", error);
+            }
         }
+
         return null;
     }
 }
